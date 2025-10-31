@@ -1,6 +1,6 @@
 1:HL["/hospital-booking/_next/static/media/e4af272ccee01ff0-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 2:HL["/hospital-booking/_next/static/css/71cf11602d0515c8.css","style",{"crossOrigin":""}]
-0:["Gfc88YQGkdXU6UaOAF3OL",[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],"$L3",[[["$","link","0",{"rel":"stylesheet","href":"/hospital-booking/_next/static/css/71cf11602d0515c8.css","precedence":"next","crossOrigin":""}]],"$L4"]]]]
+0:["47VomwMyFUoiShq76xjBG",[[["",{"children":["__PAGE__",{}]},"$undefined","$undefined",true],"$L3",[[["$","link","0",{"rel":"stylesheet","href":"/hospital-booking/_next/static/css/71cf11602d0515c8.css","precedence":"next","crossOrigin":""}]],"$L4"]]]]
 5:I[29,["326","static/chunks/326-00883bb127b49857.js","413","static/chunks/413-c11fb055087a931a.js","46","static/chunks/46-3fedeb67afdd5e02.js","185","static/chunks/app/layout-30c4b989812eb196.js"],""]
 6:I[6954,[],""]
 7:I[7264,[],""]
