@@ -1,9 +1,8 @@
 # Startup - Free Next.js Startup Website Template
 
- - [Demo](https://themewagon.github.io/startup-nextjs/)
+ - [Demo](https://rashedklo.github.io/hospital-booking/)
 
-#### Download
- - [Download from ThemeWagon](https://themewagon.com/themes/startup-nextjs/)
+
  
 
 ## Getting Started
@@ -11,13 +10,13 @@
 1. Clone Repository
 
 ```
-git clone https://github.com/themewagon/startup-nextjs.git
+git clone [https://github.com/RashedKlo/hospital-booking.git]
 ```
 
 2. Install Dependencies
 
 ```
-npm i
+npm install
 ```
 
 3. Run the development server:
