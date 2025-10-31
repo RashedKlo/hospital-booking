@@ -1,4 +1,3 @@
-import { getImagePath } from "@/lib/utils";
 import { Blog } from "@/types/blog";
 
 const getBlogData = (): Blog[] => [
@@ -7,10 +6,11 @@ const getBlogData = (): Blog[] => [
     title: "أهمية الفحوصات الدورية للحفاظ على صحتك",
     paragraph:
       "الفحوصات الطبية الدورية تساعد في الكشف المبكر عن الأمراض وتزيد من فرص العلاج الناجح. تعرف على أهم الفحوصات التي يجب إجراؤها سنوياً.",
-    image: getImagePath("/images/blog/blog-01.jpg"),
+    image: "https://source.unsplash.com/random/800x600/?health+checkup",
     author: {
       name: "د. سارة أحمد",
-      image: getImagePath("/images/blog/author-01.png"),
+      image:
+        "https://ui-avatars.com/api/?name=د.+سارة+أحمد&background=random&size=128",
       designation: "أخصائية طب الأسرة",
     },
     tags: ["صحة عامة"],
@@ -21,10 +21,11 @@ const getBlogData = (): Blog[] => [
     title: "نصائح لتقوية جهاز المناعة في فصل الشتاء",
     paragraph:
       "جهاز المناعة القوي يحميك من الأمراض الموسمية. اكتشف أفضل الطرق الطبيعية لتعزيز مناعتك من خلال التغذية السليمة والعادات الصحية.",
-    image: getImagePath("/images/blog/blog-02.jpg"),
+    image: "https://source.unsplash.com/random/800x600/?immune+system+winter",
     author: {
       name: "د. محمد حسن",
-      image: getImagePath("/images/blog/author-02.png"),
+      image:
+        "https://ui-avatars.com/api/?name=د.+محمد+حسن&background=random&size=128",
       designation: "استشاري التغذية العلاجية",
     },
     tags: ["تغذية"],
@@ -35,10 +36,12 @@ const getBlogData = (): Blog[] => [
     title: "كيف تحجز موعدك الطبي بسهولة عبر الإنترنت",
     paragraph:
       "دليل شامل لحجز المواعيد الطبية إلكترونياً. تعلم كيف توفر وقتك وتتجنب الانتظار من خلال نظام الحجز الإلكتروني المتطور.",
-    image: getImagePath("/images/blog/blog-03.jpg"),
+    image:
+      "https://source.unsplash.com/random/800x600/?online+doctor+appointment",
     author: {
       name: "د. ليلى كمال",
-      image: getImagePath("/images/blog/author-03.png"),
+      image:
+        "https://ui-avatars.com/api/?name=د.+ليلى+كمال&background=random&size=128",
       designation: "مدير الخدمات الطبية",
     },
     tags: ["تقنية"],

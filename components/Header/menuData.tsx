@@ -21,6 +21,12 @@ const menuData: Menu[] = [
   },
   {
     id: 3,
+    title: "مواعيدي",
+    path: "/myappointments",
+    newTab: false,
+  },
+  {
+    id: 4,
     title: "احجز الان",
     path: "/contact",
     newTab: false,

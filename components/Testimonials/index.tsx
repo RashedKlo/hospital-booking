@@ -36,148 +36,219 @@ const getTestimonialData = (): Testimonial[] => [
 const Testimonials = () => {
   return (
     <section
-      className="relative z-10 bg-gray-light py-16 dark:bg-bg-color-dark md:py-20 lg:py-28"
+      className="relative z-10 overflow-hidden bg-gradient-to-b from-gray-50 to-white py-16 dark:from-gray-900 dark:to-gray-800 md:py-20 lg:py-28"
       dir="rtl"
     >
-      <div className="container">
-        <SectionTitle
-          title="ماذا يقول مرضانا"
-          paragraph="آراء حقيقية من مرضى استخدموا نظام الحجز الإلكتروني وحصلوا على أفضل رعاية صحية. رضاكم هو هدفنا الأول."
-          center
-        />
+      {/* Decorative background elements */}
+      <div className="absolute left-0 top-0 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 -z-10 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
 
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-          {getTestimonialData().map((testimonial) => (
-            <SingleTestimonial key={testimonial.id} testimonial={testimonial} />
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+
+      <div className="container">
+        {/* Header with stats */}
+        <div className="mb-16">
+          <SectionTitle
+            title="ماذا يقول مرضانا"
+            paragraph="آراء حقيقية من مرضى استخدموا نظام الحجز الإلكتروني وحصلوا على أفضل رعاية صحية. رضاكم هو هدفنا الأول."
+            center
+            label="شهادات العملاء"
+            variant="gradient"
+          />
+
+          {/* Stats bar */}
+          <div className="mx-auto mt-12 flex max-w-4xl flex-wrap items-center justify-center gap-8 rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-900 sm:gap-12">
+            <div className="text-center">
+              <div className="mb-1 flex items-center justify-center gap-1">
+                <span className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
+                  4.9
+                </span>
+                <svg
+                  className="text-yellow-400 h-8 w-8"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                متوسط التقييم
+              </p>
+            </div>
+
+            <div className="h-12 w-px bg-gray-300 dark:bg-gray-700"></div>
+
+            <div className="text-center">
+              <div className="mb-1 text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
+                2,450+
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                مراجعة إيجابية
+              </p>
+            </div>
+
+            <div className="h-12 w-px bg-gray-300 dark:bg-gray-700"></div>
+
+            <div className="text-center">
+              <div className="mb-1 text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
+                98%
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                نسبة الرضا
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Testimonials Grid */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {getTestimonialData().map((testimonial, index) => (
+            <div
+              key={testimonial.id}
+              className="wow fadeInUp"
+              data-wow-delay={`.${index + 1}s`}
+            >
+              <SingleTestimonial testimonial={testimonial} />
+            </div>
           ))}
         </div>
+
+        {/* Trust indicators */}
+        <div className="mt-16 text-center">
+          <p className="mb-6 text-sm font-medium text-gray-600 dark:text-gray-400">
+            موثوق به من قبل آلاف المرضى
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 opacity-60 grayscale transition-all hover:opacity-100 hover:grayscale-0">
+            {/* Trust badges - You can replace with actual images */}
+            <div className="flex items-center gap-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                <svg
+                  className="h-6 w-6 text-primary"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                ISO معتمد
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/10">
+                <svg
+                  className="h-6 w-6 text-green-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                أمان البيانات
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
+                <svg
+                  className="h-6 w-6 text-blue-600"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                خدمة سريعة
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="mt-16 text-center">
+          <div className="mx-auto max-w-2xl rounded-2xl bg-gradient-to-r from-primary to-blue-600 p-8 shadow-2xl shadow-primary/30">
+            <h3 className="mb-3 text-2xl font-bold text-white sm:text-3xl">
+              هل أنت مستعد لتجربة أفضل؟
+            </h3>
+            <p className="mb-6 text-lg text-white/90">
+              انضم إلى آلاف المرضى الراضين واحجز موعدك الآن
+            </p>
+            <button className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-bold text-primary shadow-lg transition-all hover:scale-105 hover:shadow-xl">
+              <span>احجز موعدك الآن</span>
+              <svg
+                className="h-5 w-5 transition-transform group-hover:-translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-      <div className="absolute right-0 top-5 z-[-1]">
+
+      {/* Minimalist decorative SVG */}
+      <div className="absolute right-0 top-20 -z-10 opacity-30">
         <svg
-          width="238"
-          height="531"
-          viewBox="0 0 238 531"
-          fill="none"
+          width="150"
+          height="150"
+          viewBox="0 0 200 200"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <rect
-            opacity="0.3"
-            x="422.819"
-            y="-70.8145"
-            width="196"
-            height="541.607"
-            rx="2"
-            transform="rotate(51.2997 422.819 -70.8145)"
-            fill="url(#paint0_linear_83:2)"
-          />
-          <rect
-            opacity="0.3"
-            x="426.568"
-            y="144.886"
-            width="59.7544"
-            height="541.607"
-            rx="2"
-            transform="rotate(51.2997 426.568 144.886)"
-            fill="url(#paint1_linear_83:2)"
-          />
           <defs>
-            <linearGradient
-              id="paint0_linear_83:2"
-              x1="517.152"
-              y1="-251.373"
-              x2="517.152"
-              y2="459.865"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient
-              id="paint1_linear_83:2"
-              x1="455.327"
-              y1="-35.673"
-              x2="455.327"
-              y2="675.565"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop
+                offset="0%"
+                style={{ stopColor: "#4A6CF7", stopOpacity: 0.2 }}
+              />
+              <stop
+                offset="100%"
+                style={{ stopColor: "#4A6CF7", stopOpacity: 0 }}
+              />
             </linearGradient>
           </defs>
+          <circle cx="100" cy="100" r="80" fill="url(#grad1)" />
         </svg>
       </div>
-      <div className="absolute bottom-5 left-0 z-[-1]">
+
+      <div className="absolute bottom-20 left-0 -z-10 opacity-30">
         <svg
-          width="279"
-          height="106"
-          viewBox="0 0 279 106"
-          fill="none"
+          width="120"
+          height="120"
+          viewBox="0 0 200 200"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g opacity="0.5">
-            <path
-              d="M-57 12L50.0728 74.8548C55.5501 79.0219 70.8513 85.7589 88.2373 79.3692C109.97 71.3821 116.861 60.9642 156.615 63.7423C178.778 65.291 195.31 69.2985 205.911 62.3533C216.513 55.408 224.994 47.7682 243.016 49.1572C255.835 50.1453 265.278 50.8936 278 45.3373"
-              stroke="url(#paint0_linear_72:302)"
-            />
-            <path
-              d="M-57 1L50.0728 63.8548C55.5501 68.0219 70.8513 74.7589 88.2373 68.3692C109.97 60.3821 116.861 49.9642 156.615 52.7423C178.778 54.291 195.31 58.2985 205.911 51.3533C216.513 44.408 224.994 36.7682 243.016 38.1572C255.835 39.1453 265.278 39.8936 278 34.3373"
-              stroke="url(#paint1_linear_72:302)"
-            />
-            <path
-              d="M-57 23L50.0728 85.8548C55.5501 90.0219 70.8513 96.7589 88.2373 90.3692C109.97 82.3821 116.861 71.9642 156.615 74.7423C178.778 76.291 195.31 80.2985 205.911 73.3533C216.513 66.408 224.994 58.7682 243.016 60.1572C255.835 61.1453 265.278 61.8936 278 56.3373"
-              stroke="url(#paint2_linear_72:302)"
-            />
-            <path
-              d="M-57 35L50.0728 97.8548C55.5501 102.022 70.8513 108.759 88.2373 102.369C109.97 94.3821 116.861 83.9642 156.615 86.7423C178.778 88.291 195.31 92.2985 205.911 85.3533C216.513 78.408 224.994 70.7682 243.016 72.1572C255.835 73.1453 265.278 73.8936 278 68.3373"
-              stroke="url(#paint3_linear_72:302)"
-            />
-          </g>
           <defs>
-            <linearGradient
-              id="paint0_linear_72:302"
-              x1="256.267"
-              y1="53.6717"
-              x2="-40.8688"
-              y2="8.15715"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
-            </linearGradient>
-            <linearGradient
-              id="paint1_linear_72:302"
-              x1="256.267"
-              y1="42.6717"
-              x2="-40.8688"
-              y2="-2.84285"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
-            </linearGradient>
-            <linearGradient
-              id="paint2_linear_72:302"
-              x1="256.267"
-              y1="64.6717"
-              x2="-40.8688"
-              y2="19.1572"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
-            </linearGradient>
-            <linearGradient
-              id="paint3_linear_72:302"
-              x1="256.267"
-              y1="76.6717"
-              x2="-40.8688"
-              y2="31.1572"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
+            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop
+                offset="0%"
+                style={{ stopColor: "#4A6CF7", stopOpacity: 0.2 }}
+              />
+              <stop
+                offset="100%"
+                style={{ stopColor: "#4A6CF7", stopOpacity: 0 }}
+              />
             </linearGradient>
           </defs>
+          <circle cx="100" cy="100" r="60" fill="url(#grad2)" />
         </svg>
       </div>
     </section>
