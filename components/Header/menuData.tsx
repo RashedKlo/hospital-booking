@@ -7,30 +7,32 @@ const menuData: Menu[] = [
     path: "/",
     newTab: false,
   },
-  {
+    {
     id: 2,
+    title: "العيادات",
+    path: "/clinics",
+    newTab: false,
+  },
+  {
+    id: 3,
     title: "من نحن",
     path: "/about",
     newTab: false,
   },
   {
-    id: 33,
+    id: 4,
     title: "المدونة",
     path: "/blog",
     newTab: false,
   },
   {
-    id: 3,
+    id: 5,
     title: "مواعيدي",
     path: "/myappointments",
     newTab: false,
   },
-  {
-    id: 4,
-    title: "احجز الان",
-    path: "/contact",
-    newTab: false,
-  },
+   
+
 ];
 export default menuData;
 //  {
