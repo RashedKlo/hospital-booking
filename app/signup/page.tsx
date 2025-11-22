@@ -2,37 +2,30 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  // Arabic title for the metadata
-  title: "صفحة التسجيل | قالب Next.js مجاني للشركات الناشئة و SaaS",
-  description: "هذه صفحة التسجيل لقالب Nextjs للشركات الناشئة",
-  // other metadata
+  title: "إنشاء حساب جديد | انضم إلينا لتجربة طبية رقمية متكاملة",
+  description: "أنشئ حسابك الآن واستمتع بأفضل خدمات حجز المواعيد الطبية. واجهة مستخدم بديهية وتصميم متجاوب لجميع الأجهزة.",
 };
 
 const SignupPage = () => {
   return (
     <>
-      {/* The main section remains LTR for layout positioning */}
       <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
-              {/* === Core Form Container: Set dir="rtl" here to flip text direction === */}
               <div
-                className="mx-auto max-w-[500px] rounded bg-white px-6 py-10 shadow-three dark:bg-dark sm:p-[60px]"
-                dir="rtl" // Key change for RTL text flow
+                className="mx-auto max-w-[500px] rounded-lg bg-white px-6 py-10 shadow-three dark:bg-dark sm:p-[60px]"
+                dir="rtl"
               >
                 <h3 className="mb-3 text-center text-2xl font-bold text-black dark:text-white sm:text-3xl">
-                  إنشاء حسابك
+                  أنشئ حسابك الآن
                 </h3>
                 <p className="mb-11 text-center text-base font-medium text-body-color">
-                  إنه مجاني بالكامل وسهل للغاية
+                  انضم إلينا مجاناً واستمتع بالميزات
                 </p>
 
-                {/* Social Sign-In Buttons */}
-                <button className="mb-6 flex w-full items-center justify-center rounded-sm border border-stroke bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary dark:hover:shadow-none">
-                  {/* The SVG remains on the right (start) of the text due to dir="rtl" and 'mr-3' becomes 'margin-left' */}
+                <button className="mb-6 flex w-full items-center justify-center rounded-md border border-stroke bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary dark:hover:shadow-none">
                   <span className="ml-3">
-                    {/* Google SVG */}
                     <svg
                       width="20"
                       height="20"
@@ -68,39 +61,19 @@ const SignupPage = () => {
                   التسجيل باستخدام جوجل
                 </button>
 
-                <button className="mb-6 flex w-full items-center justify-center rounded-sm border border-stroke bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary dark:hover:shadow-none">
-                  {/* The SVG remains on the right (start) of the text due to dir="rtl" */}
-                  <span className="ml-3">
-                    {/* Github SVG */}
-                    <svg
-                      fill="currentColor"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 64 64"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M32 1.7998C15 1.7998 1 15.5998 1 32.7998C1 46.3998 9.9 57.9998 22.3 62.1998C23.9 62.4998 24.4 61.4998 24.4 60.7998C24.4 60.0998 24.4 58.0998 24.3 55.3998C15.7 57.3998 13.9 51.1998 13.9 51.1998C12.5 47.6998 10.4 46.6998 10.4 46.6998C7.6 44.6998 10.5 44.6998 10.5 44.6998C13.6 44.7998 15.3 47.8998 15.3 47.8998C18 52.6998 22.6 51.2998 24.3 50.3998C24.6 48.3998 25.4 46.9998 26.3 46.1998C19.5 45.4998 12.2 42.7998 12.2 30.9998C12.2 27.5998 13.5 24.8998 15.4 22.7998C15.1 22.0998 14 18.8998 15.7 14.5998C15.7 14.5998 18.4 13.7998 24.3 17.7998C26.8 17.0998 29.4 16.6998 32.1 16.6998C34.8 16.6998 37.5 16.9998 39.9 17.7998C45.8 13.8998 48.4 14.5998 48.4 14.5998C50.1 18.7998 49.1 22.0998 48.7 22.7998C50.7 24.8998 51.9 27.6998 51.9 30.9998C51.9 42.7998 44.6 45.4998 37.8 46.1998C38.9 47.1998 39.9 49.1998 39.9 51.9998C39.9 56.1998 39.8 59.4998 39.8 60.4998C39.8 61.2998 40.4 62.1998 41.9 61.8998C54.1 57.7998 63 46.2998 63 32.5998C62.9 15.5998 49 1.7998 32 1.7998Z" />
-                    </svg>
-                  </span>
-                  التسجيل باستخدام جيت هاب
-                </button>
-
-                {/* Separator */}
                 <div className="mb-8 flex items-center justify-center">
-                  {/* Note: The 'hidden' utility is not explicitly flipped, it still hides on small screens */}
                   <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color/50 sm:block"></span>
                   <p className="w-full px-5 text-center text-base font-medium text-body-color">
-                    أو، سجل باستخدام بريدك الإلكتروني
+                    أو عبر البريد الإلكتروني
                   </p>
                   <span className="hidden h-[1px] w-full max-w-[60px] bg-body-color/50 sm:block"></span>
                 </div>
 
-                {/* Email Form */}
                 <form>
                   <div className="mb-8">
                     <label
                       htmlFor="name"
-                      className="mb-3 block text-sm text-dark dark:text-white"
+                      className="mb-3 block text-sm font-medium text-dark dark:text-white"
                     >
                       {" "}
                       الاسم الكامل{" "}
@@ -109,41 +82,40 @@ const SignupPage = () => {
                       type="text"
                       name="name"
                       placeholder="أدخل اسمك الكامل"
-                      className="w-full rounded-sm border border-stroke bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+                      className="w-full rounded-md border border-transparent bg-[#f8f8f8] px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                     />
                   </div>
                   <div className="mb-8">
                     <label
                       htmlFor="email"
-                      className="mb-3 block text-sm text-dark dark:text-white"
+                      className="mb-3 block text-sm font-medium text-dark dark:text-white"
                     >
                       {" "}
-                      البريد الإلكتروني للعمل{" "}
+                      البريد الإلكتروني{" "}
                     </label>
                     <input
                       type="email"
                       name="email"
                       placeholder="أدخل بريدك الإلكتروني"
-                      className="w-full rounded-sm border border-stroke bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+                      className="w-full rounded-md border border-transparent bg-[#f8f8f8] px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                     />
                   </div>
                   <div className="mb-8">
                     <label
                       htmlFor="password"
-                      className="mb-3 block text-sm text-dark dark:text-white"
+                      className="mb-3 block text-sm font-medium text-dark dark:text-white"
                     >
                       {" "}
-                      كلمة المرور الخاصة بك{" "}
+                      كلمة المرور{" "}
                     </label>
                     <input
                       type="password"
                       name="password"
-                      placeholder="أدخل كلمة المرور الخاصة بك"
-                      className="w-full rounded-sm border border-stroke bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+                      placeholder="أدخل كلمة المرور"
+                      className="w-full rounded-md border border-transparent bg-[#f8f8f8] px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                     />
                   </div>
 
-                  {/* Checkbox and Terms */}
                   <div className="mb-8 flex">
                     <label
                       htmlFor="checkboxLabel"
@@ -155,7 +127,6 @@ const SignupPage = () => {
                           id="checkboxLabel"
                           className="sr-only"
                         />
-                        {/* Checkbox box design */}
                         <div className="box ml-4 mt-1 flex h-5 w-5 items-center justify-center rounded border border-body-color border-opacity-20 dark:border-white dark:border-opacity-10">
                           <span className="opacity-0">
                             <svg
@@ -176,31 +147,28 @@ const SignupPage = () => {
                         </div>
                       </div>
                       <span className="mr-3">
-                        {/* Note: In RTL, 'mr-4' on the box is flipped to be margin-left 'ml-4' */}
-                        بمجرد إنشاء الحساب، فإنك توافق على{" "}
+                        بالمتابعة، أنت توافق على{" "}
                         <a href="#0" className="text-primary hover:underline">
                           {" "}
                           الشروط والأحكام{" "}
                         </a>
-                        ، و
+                        و
                         <a href="#0" className="text-primary hover:underline">
                           {" "}
                           سياسة الخصوصية{" "}
                         </a>
-                        الخاصة بنا.
                       </span>
                     </label>
                   </div>
                   <div className="mb-6">
-                    <button className="flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white shadow-submit duration-300 hover:bg-primary/90 dark:shadow-submit-dark">
-                      التسجيل
+                    <button className="flex w-full items-center justify-center rounded-md bg-primary px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp">
+                      إنشاء حساب
                     </button>
                   </div>
                 </form>
 
-                {/* Sign In Link */}
                 <p className="text-center text-base font-medium text-body-color">
-                  هل تستخدم بالفعل؟{" "}
+                  لديك حساب بالفعل؟{" "}
                   <Link href="/signin" className="text-primary hover:underline">
                     تسجيل الدخول
                   </Link>
@@ -209,7 +177,6 @@ const SignupPage = () => {
             </div>
           </div>
         </div>
-        {/* Background SVG remains unchanged as it's a visual element */}
         <div className="absolute left-0 top-0 z-[-1]">
           <svg
             width="1440"

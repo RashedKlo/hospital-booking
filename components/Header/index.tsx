@@ -1,9 +1,8 @@
 "use client";
-import { getImagePath } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
 
@@ -11,297 +10,400 @@ const Header = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
   const [openIndex, setOpenIndex] = useState(-1);
-  const usePathName = usePathname();
+  const pathname = usePathname();
 
-  const navbarToggleHandler = () => setNavbarOpen(!navbarOpen);
+  const navbarToggleHandler = useCallback(() => setNavbarOpen(prev => !prev), []);
+  const closeNavbar = useCallback(() => setNavbarOpen(false), []);
 
-  const handleStickyNavbar = () => {
-    setSticky(window.scrollY >= 80);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleStickyNavbar);
-    return () => window.removeEventListener("scroll", handleStickyNavbar);
+  const handleStickyNavbar = useCallback(() => {
+    setSticky(window.scrollY >= 60);
   }, []);
 
-  const handleSubmenu = (index) => {
-    setOpenIndex(openIndex === index ? -1 : index);
-  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleStickyNavbar, { passive: true });
+    return () => window.removeEventListener("scroll", handleStickyNavbar);
+  }, [handleStickyNavbar]);
+
+  const handleSubmenu = useCallback((index: number) => {
+    setOpenIndex(prev => prev === index ? -1 : index);
+  }, []);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
       if (
         navbarOpen &&
-        !e.target.closest("#navbarCollapse") &&
-        !e.target.closest("#navbarToggler")
+        !target.closest("#navbarCollapse") &&
+        !target.closest("#navbarToggler")
       ) {
-        setNavbarOpen(false);
+        closeNavbar();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [navbarOpen]);
+  }, [navbarOpen, closeNavbar]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    closeNavbar();
+    setOpenIndex(-1);
+  }, [pathname, closeNavbar]);
 
   return (
     <>
-      <header
-        className={`header left-0 right-0 top-0 z-40 flex w-full items-center transition-all duration-500 ${
-          sticky
-            ? "fixed z-[9999] bg-white/80 shadow-2xl shadow-gray-900/5 backdrop-blur-xl dark:bg-gray-900/80 dark:shadow-gray-100/5"
-            : "absolute bg-transparent"
-        }`}
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center transition-all duration-300 ${sticky
+            ? "bg-white/95 shadow-lg shadow-gray-900/5 backdrop-blur-xl dark:bg-gray-900/95 dark:shadow-gray-100/5"
+            : "bg-white/80 backdrop-blur-md dark:bg-gray-900/80"
+          }`}
         dir="rtl"
       >
-        {/* Animated gradient border on scroll */}
-        {sticky && (
-          <div className="absolute bottom-0 left-0 h-[2px] w-full overflow-hidden">
-            <div className="animate-shimmer h-full w-full bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-          </div>
-        )}
+        {/* Animated gradient border */}
+        <AnimatePresence>
+          {sticky && (
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              exit={{ scaleX: 0 }}
+              className="absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-transparent via-primary to-transparent"
+            />
+          )}
+        </AnimatePresence>
 
-        <div className="container">
+        <div className="container mx-auto px-4">
           <div className="relative flex items-center justify-between">
-            {/* Logo Section - Enhanced with modern design */}
-            <div className="flex items-center px-4 xl:ml-12">
-              <Link
-                href="/"
-                className={`header-logo group flex items-center transition-all duration-300 ${
-                  sticky ? "py-3 lg:py-2" : "py-6 lg:py-8"
+            {/* Logo Section */}
+            <Link
+              href="/"
+              className={`group flex items-center gap-3 transition-all duration-300 ${sticky ? "py-3" : "py-4"
                 }`}
+            >
+              <motion.div
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative"
               >
-                <div className="relative">
-                  {/* Animated glow effect */}
-                  <div className="absolute inset-0 rounded-xl bg-primary/20 opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-100"></div>
+                <div className="absolute inset-0 rounded-xl bg-primary/20 opacity-0 blur-lg transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary via-blue-600 to-blue-700 shadow-lg shadow-primary/30">
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gOCAwIEwgMCAwIDAgOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30" />
+                  <svg
+                    className="relative z-10 h-7 w-7 text-white transition-transform duration-300 group-hover:rotate-12"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                    />
+                  </svg>
+                </div>
+              </motion.div>
 
-                  {/* Logo icon */}
-                  <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary via-blue-600 to-blue-700 shadow-lg shadow-primary/30 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-primary/40">
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gOCAwIEwgMCAwIDAgOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30"></div>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold leading-tight text-gray-900 dark:text-white">
+                  النور
+                </span>
+                <span className="hidden text-[10px] font-medium text-gray-500 dark:text-gray-400 sm:block">
+                  نظام الحجز الطبي
+                </span>
+              </div>
+            </Link>
 
-                    <svg
-                      className="relative z-10 h-7 w-7 text-white transition-transform duration-300 group-hover:rotate-12"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex lg:items-center lg:gap-1">
+              {menuData.map((menuItem, index) => (
+                <div key={index} className="group relative">
+                  {menuItem.path ? (
+                    <Link
+                      href={menuItem.path}
+                      className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${pathname === menuItem.path
+                          ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30"
+                          : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800/50"
+                        }`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="mr-3 flex flex-col">
-                  <span className="text-xl font-bold leading-tight text-gray-900 dark:text-white">
-                    النور
-                  </span>
-                  <span className="hidden text-[10px] font-medium text-gray-500 dark:text-gray-400 md:block">
-                    نظام الحجز الطبي
-                  </span>
-                </div>
-              </Link>
-            </div>
-
-            {/* Desktop Navigation & Mobile Toggle */}
-            <div className="flex w-full items-center justify-between px-4">
-              {/* Animated Mobile Menu Button */}
-              <button
-                onClick={navbarToggleHandler}
-                id="navbarToggler"
-                aria-label="القائمة"
-                className="group absolute left-4 top-1/2 z-50 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl bg-white shadow-lg transition-all hover:scale-105 hover:shadow-xl dark:bg-gray-800 lg:hidden"
-              >
-                <div className="relative h-5 w-6">
-                  <span
-                    className={`absolute right-0 block h-0.5 w-full rounded-full bg-gray-700 transition-all duration-300 dark:bg-gray-200 ${
-                      navbarOpen ? "top-[9px] w-5 rotate-45" : "top-0"
-                    }`}
-                  />
-                  <span
-                    className={`absolute right-0 top-[9px] block h-0.5 rounded-full bg-gray-700 transition-all duration-300 dark:bg-gray-200 ${
-                      navbarOpen ? "w-0 opacity-0" : "w-full opacity-100"
-                    }`}
-                  />
-                  <span
-                    className={`absolute right-0 block h-0.5 w-full rounded-full bg-gray-700 transition-all duration-300 dark:bg-gray-200 ${
-                      navbarOpen ? "top-[9px] w-5 -rotate-45" : "top-[18px]"
-                    }`}
-                  />
-                </div>
-              </button>
-
-              {/* Navigation Menu - Enhanced with modern styling */}
-              <nav
-                id="navbarCollapse"
-                className={`navbar absolute left-4 right-4 top-full z-30 mt-3 rounded-2xl border border-gray-200/50 bg-white shadow-2xl backdrop-blur-xl transition-all duration-500 dark:border-gray-700/50 dark:bg-gray-900/95 lg:visible lg:static lg:left-auto lg:right-auto lg:mt-0 lg:w-auto lg:rounded-none lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100 lg:shadow-none lg:backdrop-blur-none ${
-                  navbarOpen
-                    ? "visible translate-y-0 opacity-100"
-                    : "invisible -translate-y-4 opacity-0 lg:translate-y-0"
-                }`}
-              >
-                <ul className="block space-y-1 p-4 lg:flex lg:items-center lg:space-x-1 lg:space-y-0 lg:space-x-reverse lg:p-0">
-                  {menuData.map((menuItem, index) => (
-                    <li key={index} className="group relative">
-                      {menuItem.path ? (
-                        <Link
-                          href={menuItem.path}
-                          onClick={() => setNavbarOpen(false)}
-                          className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300 lg:px-4 lg:py-2 ${
-                            usePathName === menuItem.path
-                              ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30"
-                              : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800/50"
-                          }`}
+                      {pathname === menuItem.path && (
+                        <motion.span
+                          layoutId="activeIndicator"
+                          className="h-1.5 w-1.5 rounded-full bg-white"
+                          initial={false}
+                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        />
+                      )}
+                      {menuItem.title}
+                    </Link>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleSubmenu(index)}
+                        className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800/50"
+                      >
+                        <span>{menuItem.title}</span>
+                        <motion.svg
+                          animate={{ rotate: openIndex === index ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          width="16"
+                          height="16"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
                         >
-                          {/* Active indicator dot */}
-                          {usePathName === menuItem.path && (
-                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white"></span>
-                          )}
-                          {menuItem.title}
-                        </Link>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => handleSubmenu(index)}
-                            className="flex w-full items-center justify-between gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 transition-all duration-300 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800/50 lg:w-auto lg:px-4 lg:py-2"
-                          >
-                            <span>{menuItem.title}</span>
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 20 20"
-                              className={`transition-transform duration-300 ${
-                                openIndex === index ? "rotate-180" : ""
-                              }`}
-                            >
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </button>
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          />
+                        </motion.svg>
+                      </button>
 
-                          {/* Enhanced Submenu */}
-                          <div
-                            className={`mr-2 mt-2 space-y-1 overflow-hidden rounded-xl bg-gray-50 transition-all duration-300 dark:bg-gray-800/50 lg:invisible lg:absolute lg:right-0 lg:top-full lg:mr-0 lg:mt-3 lg:w-[260px] lg:space-y-1 lg:rounded-2xl lg:border lg:border-gray-200/50 lg:bg-white lg:p-2 lg:opacity-0 lg:shadow-2xl lg:group-hover:visible lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:dark:border-gray-700/50 lg:dark:bg-gray-900 ${
-                              openIndex === index
-                                ? "max-h-96 p-2 lg:max-h-none"
-                                : "max-h-0 p-0 lg:max-h-none lg:-translate-y-2"
-                            }`}
+                      {/* Desktop Submenu */}
+                      <AnimatePresence>
+                        {menuItem.submenu && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="invisible absolute right-0 top-full mt-2 w-64 rounded-2xl border border-gray-200/50 bg-white p-2 opacity-0 shadow-2xl backdrop-blur-xl transition-all group-hover:visible group-hover:opacity-100 dark:border-gray-700/50 dark:bg-gray-900"
                           >
-                            {menuItem.submenu?.map((submenuItem, subIndex) => (
+                            {menuItem.submenu.map((submenuItem, subIndex) => (
                               <Link
                                 href={submenuItem.path}
                                 key={subIndex}
-                                onClick={() => {
-                                  setNavbarOpen(false);
-                                  setOpenIndex(-1);
-                                }}
                                 className="group/item flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:bg-primary/10 hover:text-primary dark:text-gray-300 dark:hover:bg-primary/10 dark:hover:text-primary"
                               >
-                                <span className="h-1.5 w-1.5 rounded-full bg-gray-400 transition-all group-hover/item:scale-150 group-hover/item:bg-primary"></span>
+                                <span className="h-1.5 w-1.5 rounded-full bg-gray-400 transition-all group-hover/item:scale-150 group-hover/item:bg-primary" />
                                 {submenuItem.title}
                               </Link>
                             ))}
-                          </div>
-                        </>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-
-              {/* Enhanced Auth Buttons & Theme Toggle */}
-              <div className="flex items-center gap-2 pl-4 lg:gap-3 lg:pl-0">
-                <Link
-                  href="/signin"
-                  className="group hidden items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 md:flex"
-                >
-                  تسجيل الدخول
-                  <svg
-                    className="h-4 w-4 transition-transform group-hover:-translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                    ></path>
-                  </svg>
-                </Link>
-
-                <Link
-                  href="/contact"
-                  className="group relative hidden overflow-hidden rounded-xl bg-gradient-to-r from-primary via-blue-600 to-blue-700 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/40 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/50 md:flex md:items-center md:gap-2"
-                >
-                  {/* Animated shine effect */}
-                  <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full"></div>
-
-                  <span className="relative">حجز موعد</span>
-                  <svg
-                    className="relative h-4 w-4 transition-transform group-hover:-translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                </Link>
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700">
-                  <ThemeToggler />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )}
                 </div>
+              ))}
+            </nav>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-2 lg:gap-3">
+              {/* Sign In - Hidden on mobile */}
+              <Link
+                href="/signin"
+                className="group hidden items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 md:flex"
+              >
+                تسجيل الدخول
+                <svg
+                  className="h-4 w-4 transition-transform group-hover:-translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                  />
+                </svg>
+              </Link>
+
+              {/* Book Appointment - Hidden on mobile */}
+              <Link
+                href="/contact"
+                className="group relative hidden overflow-hidden rounded-xl bg-gradient-to-r from-primary via-blue-600 to-blue-700 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/40 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/50 md:flex md:items-center md:gap-2"
+              >
+                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+                <span className="relative">حجز موعد</span>
+                <svg
+                  className="relative h-4 w-4 transition-transform group-hover:-translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </Link>
+
+              {/* Theme Toggle */}
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700">
+                <ThemeToggler />
               </div>
+
+              {/* Mobile Menu Button */}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={navbarToggleHandler}
+                id="navbarToggler"
+                aria-label="القائمة"
+                aria-expanded={navbarOpen}
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 lg:hidden"
+              >
+                <div className="relative h-5 w-6">
+                  <motion.span
+                    animate={{
+                      rotate: navbarOpen ? 45 : 0,
+                      y: navbarOpen ? 8 : 0,
+                    }}
+                    className="absolute right-0 top-0 block h-0.5 w-full rounded-full bg-gray-700 dark:bg-gray-200"
+                  />
+                  <motion.span
+                    animate={{ opacity: navbarOpen ? 0 : 1 }}
+                    className="absolute right-0 top-2 block h-0.5 w-full rounded-full bg-gray-700 dark:bg-gray-200"
+                  />
+                  <motion.span
+                    animate={{
+                      rotate: navbarOpen ? -45 : 0,
+                      y: navbarOpen ? -8 : 0,
+                    }}
+                    className="absolute right-0 top-4 block h-0.5 w-full rounded-full bg-gray-700 dark:bg-gray-200"
+                  />
+                </div>
+              </motion.button>
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      {/* Enhanced Overlay for mobile menu */}
-      {navbarOpen && (
-        <div
-          className="animate-fadeIn fixed inset-0 z-20 bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm lg:hidden"
-          onClick={() => setNavbarOpen(false)}
-        />
-      )}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {navbarOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+              onClick={closeNavbar}
+            />
 
-      <style jsx>{`
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        .animate-shimmer {
-          animation: shimmer 3s infinite;
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-      `}</style>
+            {/* Mobile Navigation */}
+            <motion.nav
+              id="navbarCollapse"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 z-50 h-full w-80 max-w-[85vw] overflow-y-auto bg-white shadow-2xl dark:bg-gray-900 lg:hidden"
+              dir="rtl"
+            >
+              {/* Mobile Menu Header */}
+              <div className="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-800">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-700">
+                    <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                  </div>
+                  <span className="text-lg font-bold text-gray-900 dark:text-white">القائمة</span>
+                </div>
+                <button
+                  onClick={closeNavbar}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Mobile Menu Items */}
+              <div className="p-4 space-y-2">
+                {menuData.map((menuItem, index) => (
+                  <div key={index}>
+                    {menuItem.path ? (
+                      <Link
+                        href={menuItem.path}
+                        onClick={closeNavbar}
+                        className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${pathname === menuItem.path
+                            ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg"
+                            : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                          }`}
+                      >
+                        {pathname === menuItem.path && (
+                          <span className="h-2 w-2 rounded-full bg-white" />
+                        )}
+                        {menuItem.title}
+                      </Link>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleSubmenu(index)}
+                          className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                        >
+                          <span>{menuItem.title}</span>
+                          <motion.svg
+                            animate={{ rotate: openIndex === index ? 180 : 0 }}
+                            className="h-4 w-4"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path fillRule="evenodd" clipRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                          </motion.svg>
+                        </button>
+                        <AnimatePresence>
+                          {openIndex === index && menuItem.submenu && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden pr-4 space-y-1"
+                            >
+                              {menuItem.submenu.map((submenuItem, subIndex) => (
+                                <Link
+                                  href={submenuItem.path}
+                                  key={subIndex}
+                                  onClick={closeNavbar}
+                                  className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-gray-600 hover:bg-primary/10 hover:text-primary dark:text-gray-400 dark:hover:text-primary"
+                                >
+                                  <span className="h-1.5 w-1.5 rounded-full bg-gray-400" />
+                                  {submenuItem.title}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Mobile Menu Footer */}
+              <div className="border-t border-gray-200 p-4 space-y-2 dark:border-gray-800">
+                <Link
+                  href="/signin"
+                  onClick={closeNavbar}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                >
+                  تسجيل الدخول
+                </Link>
+                <Link
+                  href="/contact"
+                  onClick={closeNavbar}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-blue-600 px-4 py-3 text-sm font-bold text-white shadow-lg"
+                >
+                  حجز موعد
+                </Link>
+              </div>
+            </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };
 
-export default Header;
+export default memo(Header);

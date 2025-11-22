@@ -1,23 +1,13 @@
-import Breadcrumb from "@/components/Common/Breadcrumb";
-import AppointmentsList from "@/components/MyAppointments/AppointmentsList";
-import AppointmentStats from "@/components/MyAppointments/AppointmentStats";
+import MainView from "@/components/MyAppointments/MainView";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "مواعيدي | إدارة حجوزاتك الطبية بسهولة",
+  description: "تتبع مواعيدك الطبية القادمة والسابقة، وقم بإدارة حجوزاتك مع أفضل الأطباء والعيادات بكل سهولة وأمان.",
+};
 
 const MyAppointments = () => {
-  return (
-    <>
-      <Breadcrumb
-        pageName="مواعيدي"
-        description="عرض وإدارة جميع مواعيدك الطبية. يمكنك تعديل أو إلغاء المواعيد القادمة ومراجعة سجل المواعيد السابقة."
-      />
-
-      <section className="pb-[120px] pt-[120px]" dir="rtl">
-        <div className="container">
-          <AppointmentStats />
-          <AppointmentsList />
-        </div>
-      </section>
-    </>
-  );
+  return <MainView />;
 };
 
 export default MyAppointments;

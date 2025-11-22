@@ -1,65 +1,113 @@
 "use client";
 
-import { useState } from "react";
-import SingleAppointment from "./SingleAppointment";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import SingleAppointment, { Appointment } from "./SingleAppointment";
+import { ToastContainer, Toast } from "./Toast";
 
 const AppointmentsList = () => {
   const [filter, setFilter] = useState<
     "all" | "upcoming" | "completed" | "cancelled"
   >("all");
-
-  const appointments = [
+  const [isLoading, setIsLoading] = useState(true);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([
     {
       id: 1,
       doctorName: "د. سارة أحمد",
+      clinicName: "عيادات الشفاء التخصصية",
       specialty: "طب الأسرة",
       date: "2025-11-15",
       time: "10:00 صباحاً",
-      status: "upcoming" as const,
+      status: "upcoming",
       department: "العيادات الخارجية",
       appointmentNumber: "A-2025-001",
+      price: "150 ر.س",
     },
     {
       id: 2,
       doctorName: "د. محمد حسن",
+      clinicName: "مستشفى القلب الدولي",
       specialty: "أخصائي قلب",
       date: "2025-11-18",
       time: "02:30 مساءً",
-      status: "upcoming" as const,
+      status: "upcoming",
       department: "قسم القلب",
       appointmentNumber: "A-2025-002",
+      price: "300 ر.س",
     },
     {
       id: 3,
       doctorName: "د. ليلى كمال",
+      clinicName: "مركز الجراحة المتطور",
       specialty: "جراحة عامة",
       date: "2025-10-25",
       time: "09:00 صباحاً",
-      status: "completed" as const,
+      status: "completed",
       department: "الجراحة",
       appointmentNumber: "A-2025-003",
+      price: "250 ر.س",
     },
     {
       id: 4,
       doctorName: "د. أحمد يوسف",
+      clinicName: "عيادة الأطفال السعيدة",
       specialty: "أطفال",
       date: "2025-10-20",
       time: "11:00 صباحاً",
-      status: "cancelled" as const,
+      status: "cancelled",
       department: "طب الأطفال",
       appointmentNumber: "A-2025-004",
+      price: "120 ر.س",
     },
     {
       id: 5,
       doctorName: "د. فاطمة علي",
+      clinicName: "مستشفى النساء والولادة",
       specialty: "نساء وولادة",
       date: "2025-11-20",
       time: "03:00 مساءً",
-      status: "upcoming" as const,
+      status: "upcoming",
       department: "النساء والولادة",
       appointmentNumber: "A-2025-005",
+      price: "200 ر.س",
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    // Simulate data fetching
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const addToast = (type: Toast["type"], message: string) => {
+    const id = Date.now().toString();
+    setToasts((prev) => [...prev, { id, type, message }]);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
+  const handleCancel = (id: number) => {
+    setAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === id ? { ...apt, status: "cancelled" as const } : apt
+      )
+    );
+    addToast("success", "تم إلغاء الموعد بنجاح");
+  };
+
+  const handleReschedule = (id: number, date: string, time: string) => {
+    setAppointments((prev) =>
+      prev.map((apt) =>
+        apt.id === id ? { ...apt, date, time } : apt
+      )
+    );
+    addToast("success", `تم إعادة جدولة الموعد إلى ${date} في ${time}`);
+  };
 
   const filteredAppointments = appointments.filter((appointment) => {
     if (filter === "all") return true;
@@ -85,40 +133,142 @@ const AppointmentsList = () => {
     },
   ];
 
-  return (
-    <div className="wow fadeInUp" data-wow-delay=".2s">
-      {/* Filter Buttons */}
-      <div className="mb-8 flex flex-wrap gap-3">
-        {filterButtons.map((btn) => (
-          <button
-            key={btn.value}
-            onClick={() => setFilter(btn.value)}
-            className={`${
-              filter === btn.value
-                ? "bg-primary text-white"
-                : "bg-white text-body-color dark:bg-gray-dark dark:text-body-color-dark"
-            } rounded-md px-6 py-3 text-base font-medium shadow-three transition duration-300 hover:shadow-one dark:shadow-two dark:hover:shadow-gray-dark`}
-          >
-            {btn.label} ({btn.count})
-          </button>
-        ))}
-      </div>
-
-      {/* Appointments List */}
-      <div className="space-y-6">
-        {filteredAppointments.length > 0 ? (
-          filteredAppointments.map((appointment) => (
-            <SingleAppointment key={appointment.id} appointment={appointment} />
-          ))
-        ) : (
-          <div className="rounded-sm bg-white p-12 text-center shadow-three dark:bg-gray-dark">
-            <p className="text-lg text-body-color dark:text-body-color-dark">
-              لا توجد مواعيد في هذه الفئة
-            </p>
+  const SkeletonCard = () => (
+    <div className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-dark">
+      <div className="flex animate-pulse flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex-1 space-y-5">
+          <div className="flex items-start gap-4">
+            <div className="h-16 w-16 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="flex-1 space-y-2">
+              <div className="h-6 w-48 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 w-32 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-7 w-24 rounded-full bg-gray-200 dark:bg-gray-700" />
+            </div>
           </div>
-        )}
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-xl bg-gray-50 p-3 dark:bg-gray-800/50"
+              >
+                <div className="h-10 w-10 rounded-lg bg-gray-200 dark:bg-gray-700" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 w-16 rounded bg-gray-200 dark:bg-gray-700" />
+                  <div className="h-4 w-24 rounded bg-gray-200 dark:bg-gray-700" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-2.5 lg:w-48">
+          <div className="h-11 rounded-xl bg-gray-200 dark:bg-gray-700" />
+          <div className="h-11 rounded-xl bg-gray-200 dark:bg-gray-700" />
+          <div className="h-11 rounded-xl bg-gray-200 dark:bg-gray-700" />
+        </div>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      <ToastContainer toasts={toasts} onClose={removeToast} />
+
+      <div className="wow fadeInUp" data-wow-delay=".2s">
+        {/* Filter Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 flex flex-wrap gap-3"
+        >
+          {filterButtons.map((btn, index) => (
+            <motion.button
+              key={btn.value}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setFilter(btn.value)}
+              disabled={isLoading}
+              className={`${filter === btn.value
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                  : "bg-white text-body-color dark:bg-gray-dark dark:text-body-color-dark"
+                } rounded-xl px-6 py-3 text-base font-semibold shadow-md transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
+            >
+              {btn.label} <span className="font-bold">({btn.count})</span>
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Appointments List */}
+        <motion.div layout className="space-y-6">
+          <AnimatePresence mode="popLayout">
+            {isLoading ? (
+              // Skeleton Loading State
+              <>
+                {[1, 2, 3].map((i) => (
+                  <motion.div
+                    key={`skeleton-${i}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <SkeletonCard />
+                  </motion.div>
+                ))}
+              </>
+            ) : filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment, index) => (
+                <motion.div
+                  key={appointment.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <SingleAppointment
+                    appointment={appointment}
+                    onCancel={handleCancel}
+                    onReschedule={handleReschedule}
+                  />
+                </motion.div>
+              ))
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="rounded-2xl bg-white p-12 text-center shadow-md dark:bg-gray-dark"
+              >
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+                  <svg
+                    className="h-8 w-8 text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
+                  </svg>
+                </div>
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                  لا توجد مواعيد في هذه الفئة
+                </p>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  جرب تصفية مختلفة أو احجز موعداً جديداً
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </>
   );
 };
 

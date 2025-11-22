@@ -1,12 +1,13 @@
 "use client"
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, memo } from 'react';
+import { motion } from 'framer-motion';
 import PageHeader from '../../components/Clinics/components/PageHeader';
 import FilterPanel from '../../components/Clinics/components/FilterPanel';
 import SortControls from '../../components/Clinics/components/SortControls';
 import ClinicGrid from '../../components/Clinics/components/ClinicGrid';
 import { Clinic, FilterOptions } from '../../components/Clinics/types';
 
-const ClinicsOverview = () => {
+const ClinicsOverview = memo(() => {
   const [filters, setFilters] = useState<FilterOptions>({
     region: '',
     specialization: '',
@@ -19,7 +20,7 @@ const ClinicsOverview = () => {
   const [loading, setLoading] = useState(true);
 
   // Mock clinics data
-  const mockClinics: Clinic[] = [
+  const mockClinics: Clinic[] = useMemo(() => [
     {
       id: '1',
       name: 'عيادة الدكتور أحمد للقلب',
@@ -132,19 +133,18 @@ const ClinicsOverview = () => {
       languages: ['العربية', 'الإنجليزية', 'الألمانية'],
       services: ['تخطيط الدماغ', 'الرنين المغناطيسي', 'علاج الصرع']
     },
-
-  ];
+  ], []);
 
   // Simulate loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Filter and sort clinics
+  // Filter and sort clinics - Optimized with useMemo
   const filteredAndSortedClinics = useMemo(() => {
     let filtered = mockClinics.filter((clinic) => {
       const matchesRegion = !filters.region || clinic.region === filters.region;
@@ -179,19 +179,38 @@ const ClinicsOverview = () => {
     });
 
     return filtered;
-  }, [filters, sortBy]);
+  }, [filters, sortBy, mockClinics]);
+
+  // Memoized handlers
+  const handleFiltersChange = useCallback((newFilters: FilterOptions) => {
+    setFilters(newFilters);
+  }, []);
+
+  const handleSortChange = useCallback((newSort: string) => {
+    setSortBy(newSort);
+  }, []);
+
+  const handleViewModeChange = useCallback((mode: 'grid' | 'list') => {
+    setViewMode(mode);
+  }, []);
 
   return (
     <>
-      <header>
+      <head>
         <title>العيادات الطبية المتخصصة - النور الطبية</title>
         <meta name="description" content="اكتشف أفضل العيادات الطبية المتخصصة في المملكة العربية السعودية. احجز موعدك الآن مع أفضل الأطباء." />
         <meta name="keywords" content="عيادات طبية، أطباء، حجز موعد، الرياض، جدة، الدمام" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </header>
+      </head>
 
-      <div className="min-h-screen bg-background" dir="rtl">
-        <main className="pt-16 md:pt-20">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="min-h-screen bg-gray-50 dark:bg-gray-950"
+        dir="rtl"
+      >
+        <main className="pt-20 md:pt-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl">
             {/* Page Header */}
             <PageHeader
@@ -205,7 +224,7 @@ const ClinicsOverview = () => {
               <aside className="lg:col-span-3">
                 <FilterPanel
                   filters={filters}
-                  onFiltersChange={setFilters}
+                  onFiltersChange={handleFiltersChange}
                   totalResults={filteredAndSortedClinics.length}
                   className="lg:sticky lg:top-24"
                 />
@@ -216,19 +235,23 @@ const ClinicsOverview = () => {
                 {/* Sort Controls */}
                 <SortControls
                   sortBy={sortBy}
-                  onSortChange={setSortBy}
+                  onSortChange={handleSortChange}
                   viewMode={viewMode}
-                  onViewModeChange={setViewMode}
+                  onViewModeChange={handleViewModeChange}
                 />
 
                 {/* Results Summary - Mobile */}
-                <div className="block lg:hidden">
-                  <div className="bg-surface rounded-clinical medical-card-elevation-1 p-4">
-                    <p className="font-arabic-body text-sm text-muted-foreground text-center">
-                      عرض <span className="font-semibold text-foreground">{filteredAndSortedClinics.length}</span> من أصل <span className="font-semibold text-foreground">{mockClinics.length}</span> عيادة
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="block lg:hidden"
+                >
+                  <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-4 shadow-sm">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                      عرض <span className="font-bold text-primary">{filteredAndSortedClinics.length}</span> من أصل <span className="font-bold text-gray-900 dark:text-white">{mockClinics.length}</span> عيادة
                     </p>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Clinics Grid */}
                 <ClinicGrid
@@ -240,53 +263,82 @@ const ClinicsOverview = () => {
 
                 {/* Pagination Placeholder */}
                 {!loading && filteredAndSortedClinics.length > 0 && (
-                  <div className="flex justify-center items-center space-x-2 space-x-reverse pt-6">
-                    <button className="px-4 py-2 bg-muted hover:bg-muted/80 rounded-clinical-sm font-arabic-body text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex justify-center items-center gap-2 pt-6"
+                  >
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled
+                    >
                       السابق
-                    </button>
-                    <div className="flex items-center space-x-2 space-x-reverse">
-                      <button className="w-10 h-10 bg-primary text-white rounded-clinical-sm font-arabic-data text-sm">
+                    </motion.button>
+                    <div className="flex items-center gap-2">
+                      <button className="w-10 h-10 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl text-sm font-bold shadow-lg">
                         1
                       </button>
-                      <button className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-clinical-sm font-arabic-data text-sm transition-colors">
+                      <button className="w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl text-sm font-semibold transition-colors">
                         2
                       </button>
-                      <button className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-clinical-sm font-arabic-data text-sm transition-colors">
+                      <button className="w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl text-sm font-semibold transition-colors">
                         3
                       </button>
                     </div>
-                    <button className="px-4 py-2 bg-muted hover:bg-muted/80 rounded-clinical-sm font-arabic-body text-sm transition-colors">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl text-sm font-semibold transition-colors"
+                    >
                       التالي
-                    </button>
-                  </div>
+                    </motion.button>
+                  </motion.div>
                 )}
               </div>
             </div>
 
             {/* Bottom CTA Section */}
             {!loading && filteredAndSortedClinics.length > 0 && (
-              <div className="mt-12 sm:mt-16 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-clinical p-6 sm:p-8 text-center">
-                <h2 className="font-arabic-heading font-bold text-xl sm:text-2xl text-foreground mb-3">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="mt-12 sm:mt-16 bg-gradient-to-r from-primary/10 via-blue-500/10 to-indigo-500/10 dark:from-primary/5 dark:via-blue-500/5 dark:to-indigo-500/5 rounded-2xl p-6 sm:p-8 text-center border border-primary/20 dark:border-primary/10"
+              >
+                <h2 className="font-bold text-xl sm:text-2xl text-gray-900 dark:text-white mb-3">
                   لم تجد ما تبحث عنه؟
                 </h2>
-                <p className="font-arabic-body text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto leading-relaxed">
                   يمكنك التواصل معنا مباشرة وسنساعدك في إيجاد العيادة المناسبة لاحتياجاتك الطبية
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                  <button className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-clinical font-arabic-body transition-colors">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
+                  >
                     تواصل معنا
-                  </button>
-                  <button className="w-full sm:w-auto bg-white hover:bg-gray-50 text-primary border-2 border-primary px-6 py-3 rounded-clinical font-arabic-body transition-colors">
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full sm:w-auto bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-primary dark:text-blue-400 border-2 border-primary dark:border-blue-500 px-6 py-3 rounded-xl font-semibold transition-all"
+                  >
                     طلب استشارة مجانية
-                  </button>
+                  </motion.button>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         </main>
-      </div>
+      </motion.div>
     </>
   );
-};
+});
+
+ClinicsOverview.displayName = 'ClinicsOverview';
 
 export default ClinicsOverview;

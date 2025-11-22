@@ -12,8 +12,8 @@ import Video from "@/components/Video";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Free Next.js Template for Startup and SaaS",
-  description: "This is Home for Startup Nextjs Template",
+  title: "Hospital Booking - Find & Book Appointments",
+  description: "Book your medical appointments with top doctors and specialists. Easy, fast, and secure hospital booking system.",
   // other metadata
 };
 
