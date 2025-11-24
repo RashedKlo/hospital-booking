@@ -196,13 +196,6 @@ const ClinicsOverview = memo(() => {
 
   return (
     <>
-      <head>
-        <title>العيادات الطبية المتخصصة - النور الطبية</title>
-        <meta name="description" content="اكتشف أفضل العيادات الطبية المتخصصة في المملكة العربية السعودية. احجز موعدك الآن مع أفضل الأطباء." />
-        <meta name="keywords" content="عيادات طبية، أطباء، حجز موعد، الرياض، جدة، الدمام" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
-
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

@@ -1,96 +1,64 @@
+"use client";
+
 import SingleBlog from "@/components/Blog/SingleBlog";
 import blogData from "@/components/Blog/blogData";
 import Breadcrumb from "@/components/Common/Breadcrumb";
-
+import { motion } from "framer-motion";
 import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "صفحة المدونة | قالب Next.js المجاني للشركات الناشئة و SaaS",
-  description: "هذه صفحة المدونة لقالب Nextjs للشركات الناشئة",
-  // other metadata
-};
 
 const Blog = () => {
   return (
     <>
       <Breadcrumb
-        pageName="شبكة المدونة"
-        description="اكتشف أحدث المقالات والأخبار والتحديثات. نشارك معك رؤى قيمة ومحتوى مفيد يساعدك على البقاء على اطلاع بأحدث التطورات في مجالنا."
+        pageName="المدونة الطبية"
+        description="اكتشف أحدث المقالات والنصائح الطبية. نشارك معك معلومات قيمة ومحتوى مفيد يساعدك على البقاء بصحة جيدة."
       />
 
-      <section className="pb-[120px] pt-[120px]" dir="rtl">
-        <div className="container">
-          <div className="-mx-4 flex flex-wrap justify-center">
+      <section className="bg-white py-16 dark:bg-gray-950 md:py-20 lg:py-24" dir="rtl">
+        <div className="container mx-auto px-4">
+          {/* Blog Grid */}
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {blogData().map((blog) => (
-              <div
-                key={blog.id}
-                className="w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
-              >
-                <SingleBlog blog={blog} />
-              </div>
+              <SingleBlog key={blog.id} blog={blog} />
             ))}
           </div>
 
-          <div
-            className="wow fadeInUp -mx-4 flex flex-wrap"
-            data-wow-delay=".15s"
+          {/* Pagination */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-12 flex justify-center"
           >
-            <div className="w-full px-4">
-              <ul className="flex items-center justify-center pt-8">
-                <li className="mx-1">
-                  <a
-                    href="#0"
-                    className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                  ></a>
-                </li>
-                <li className="mx-1">
-                  <a
-                    href="#0"
-                    className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                  >
-                    1
-                  </a>
-                </li>
-                <li className="mx-1">
-                  <a
-                    href="#0"
-                    className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                  >
-                    2
-                  </a>
-                </li>
-                <li className="mx-1">
-                  <a
-                    href="#0"
-                    className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                  >
-                    3
-                  </a>
-                </li>
-                <li className="mx-1">
-                  <span className="flex h-9 min-w-[36px] cursor-not-allowed items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color">
-                    ...
-                  </span>
-                </li>
-                <li className="mx-1">
-                  <a
-                    href="#0"
-                    className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                  >
-                    12
-                  </a>
-                </li>
-                <li className="mx-1">
-                  <a
-                    href="#0"
-                    className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                  >
-                    التالي
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+            <nav className="flex items-center gap-2">
+              <button className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-400 transition-colors hover:border-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:hover:border-primary">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <button className="flex h-10 min-w-[40px] items-center justify-center rounded-lg border border-primary bg-primary px-4 text-sm font-semibold text-white">
+                1
+              </button>
+              <button className="flex h-10 min-w-[40px] items-center justify-center rounded-lg border border-gray-200 px-4 text-sm font-semibold text-gray-700 transition-colors hover:border-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:text-gray-300">
+                2
+              </button>
+              <button className="flex h-10 min-w-[40px] items-center justify-center rounded-lg border border-gray-200 px-4 text-sm font-semibold text-gray-700 transition-colors hover:border-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:text-gray-300">
+                3
+              </button>
+              <span className="flex h-10 items-center px-2 text-gray-400">...</span>
+              <button className="flex h-10 min-w-[40px] items-center justify-center rounded-lg border border-gray-200 px-4 text-sm font-semibold text-gray-700 transition-colors hover:border-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:text-gray-300">
+                12
+              </button>
+
+              <button className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-700 transition-colors hover:border-primary hover:bg-primary hover:text-white dark:border-gray-800 dark:text-gray-300">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </nav>
+          </motion.div>
         </div>
       </section>
     </>

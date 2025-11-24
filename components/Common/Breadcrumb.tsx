@@ -38,7 +38,7 @@ const Breadcrumb = ({
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-end"
             >
-              <ul className="flex items-center justify-end gap-2">
+              <ul className="flex items-center justify-start gap-2">
                 <li>
                   <Link
                     href="/"

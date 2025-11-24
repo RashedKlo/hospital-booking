@@ -260,12 +260,24 @@ const FilterPanel: React.FC<FilterPanelProps> = memo(({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
 
-  // Sticky scroll handler
+  // Handle side effects
   useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
     const handleScroll = () => setIsSticky(window.scrollY > 100);
+
+    // Initial check
+    handleResize();
+    handleScroll();
+
+    window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   // Helper functions
@@ -293,10 +305,10 @@ const FilterPanel: React.FC<FilterPanelProps> = memo(({
       searchTerm: ''
     });
 
-    if (window.innerWidth < 768) {
+    if (!isDesktop) {
       setIsExpanded(false);
     }
-  }, [onFiltersChange]);
+  }, [onFiltersChange, isDesktop]);
 
   return (
     <motion.aside
@@ -315,7 +327,7 @@ const FilterPanel: React.FC<FilterPanelProps> = memo(({
 
       {/* Filter Content */}
       <AnimatePresence>
-        {(isExpanded || window.innerWidth >= 768) && (
+        {(isExpanded || isDesktop) && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
