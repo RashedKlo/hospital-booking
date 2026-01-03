@@ -54,7 +54,10 @@ const Video = () => {
 
 
 
-      <div className="absolute bottom-0 left-0 right-0 z-[-1] h-full w-full bg-[url(/images/video/shape.svg)] bg-cover bg-center bg-no-repeat"></div>
+      <div
+        className="absolute bottom-0 left-0 right-0 z-[-1] h-full w-full bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${getImagePath("/images/video/shape.svg")})` }}
+      ></div>
     </section>
   );
 };

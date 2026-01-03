@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Icon from '@/components/UI/AppIcon';
 
-export default function BookAppointmentPage() {
+function BookForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
@@ -258,5 +258,20 @@ export default function BookAppointmentPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function BookAppointmentPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600 dark:text-gray-400">جاري التحميل...</p>
+                </div>
+            </div>
+        }>
+            <BookForm />
+        </Suspense>
     );
 }

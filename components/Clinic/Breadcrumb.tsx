@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import { BreadcrumbItem } from '../types';
 import Icon from '@/components/UI/AppIcon';
+import { BreadcrumbItem } from '@/types/clinic';
 
 interface BreadcrumbProps {
   items: BreadcrumbItem[];
@@ -15,13 +15,13 @@ const Breadcrumb = ({ items, className = '' }: BreadcrumbProps) => {
         <React.Fragment key={item.href}>
           {index > 0 && (
             <Icon
-              name="ChevronLeft" 
-              size={14} 
-              color="var(--color-muted-foreground)" 
+              name="ChevronLeft"
+              size={14}
+              color="var(--color-muted-foreground)"
               className="rotate-180"
             />
           )}
-          
+
           {item.isActive ? (
             <span className="font-arabic-body font-medium text-foreground">
               {item.label}
