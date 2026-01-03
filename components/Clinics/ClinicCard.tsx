@@ -17,7 +17,7 @@ const ClinicCard = memo(({ clinic, searchTerm = '', className = '', index = 0 }:
 
   const handleViewDetails = useCallback((e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    router.push(`/clinics/${clinic.id}`);
+    router.push(`/clinics/detail/?id=${clinic.id}`);
   }, [router, clinic.id]);
 
   const handleQuickBook = useCallback((e: React.MouseEvent) => {

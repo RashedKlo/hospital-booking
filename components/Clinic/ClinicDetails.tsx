@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, memo, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import ContactSidebar from '@/components/UI/ContactSidebar';
 import ClinicHero from './ClinicHero';
@@ -19,8 +19,9 @@ interface ClinicDetailsProps {
 
 const ClinicDetails = memo(({ initialData }: ClinicDetailsProps) => {
     const params = useParams();
+    const searchParams = useSearchParams();
     const router = useRouter();
-    const clinicId = params.id as string;
+    const clinicId = (params.id as string) || searchParams.get('id');
 
     const [clinicData, setClinicData] = useState<ClinicDetail | null>(initialData || null);
     const [isLoading, setIsLoading] = useState(!initialData);
