@@ -11,6 +11,7 @@ import LocationMap from './LocationMap';
 import { Doctor, ClinicDetail } from '@/types/clinic';
 import Icon from '@/components/UI/AppIcon';
 import Contact from '../Contact';
+import { API_CONFIG } from '@/config/api.config';
 
 interface ClinicDetailsProps {
     initialData?: ClinicDetail;
@@ -32,8 +33,8 @@ const ClinicDetails = memo(({ initialData }: ClinicDetailsProps) => {
                 setIsLoading(true);
                 setError(null);
 
-                // Fetch clinic data from internal Next.js API route
-                const response = await fetch(`/hospital-booking/api/clinicdetails?id=${clinicId}`);
+                // Fetch clinic data directly from backend
+                const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLINICS.DETAIL(clinicId)}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch clinic: ${response.statusText}`);
                 }

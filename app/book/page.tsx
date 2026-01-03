@@ -4,11 +4,12 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Icon from '@/components/UI/AppIcon';
+import { API_CONFIG } from '@/config/api.config';
 
 function BookForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+    const { user, accessToken, isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
     const doctorId = searchParams.get('doctorId');
     const [submitting, setSubmitting] = useState(false);
@@ -72,12 +73,13 @@ function BookForm() {
                 status: "Pending"
             };
 
-            const response = await fetch('/hospital-booking/api/appointments', {
-                method: 'POST',
+            const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.APPOINTMENTS.CREATE}`, {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
             });
 
             const data = await response.json();

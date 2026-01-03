@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import SingleAppointment, { Appointment } from "./SingleAppointment";
 import { ToastContainer, Toast } from "./Toast";
 import { useAuth } from "@/hooks/useAuth";
+import { API_CONFIG } from "@/config/api.config";
 
 const AppointmentsList = () => {
   const { accessToken, isAuthenticated } = useAuth();
@@ -24,7 +25,7 @@ const AppointmentsList = () => {
 
       setIsLoading(true);
       try {
-        const response = await fetch('/hospital-booking/api/appointments?Page=1&Limit=20', {
+        const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.APPOINTMENTS.CREATE}?Page=1&Limit=20`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`
           }

@@ -6,6 +6,7 @@ import FilterPanel from '@/components/Clinics/FilterPanel';
 import SortControls from '@/components/Clinics/SortControls';
 import ClinicGrid from '@/components/Clinics/ClinicGrid';
 import { Clinic, FilterOptions, SortParams } from '@/types/clinic';
+import { API_CONFIG } from '@/config/api.config';
 
 // --- Component ---
 
@@ -48,7 +49,7 @@ const ClinicsOverview = memo(() => {
       queryParams.append('SortBy', sortBy.sortBy);
       queryParams.append('IsDescending', (sortBy.order === 'desc').toString());
 
-      const response = await fetch(`/hospital-booking/api/clinics?${queryParams.toString()}`);
+      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CLINICS.LIST}?${queryParams.toString()}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch clinics: ${response.statusText}`);
       }

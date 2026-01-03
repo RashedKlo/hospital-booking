@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { authStorage, AuthData } from '@/utils/auth';
+import { API_CONFIG } from '@/config/api.config';
 import {
     AuthState,
     UseAuthReturn,
@@ -55,7 +56,7 @@ export function useAuth(): UseAuthReturn {
                 setState((prev) => ({ ...prev, isLoading: true }));
                 setError(null);
 
-                const response = await fetch('/hospital-booking/api/auth/login', {
+                const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.LOGIN}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(credentials),
@@ -103,7 +104,7 @@ export function useAuth(): UseAuthReturn {
                 setState((prev) => ({ ...prev, isLoading: true }));
                 setError(null);
 
-                const response = await fetch('/hospital-booking/api/auth/register', {
+                const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.REGISTER}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(credentials),
