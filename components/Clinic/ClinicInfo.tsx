@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ClinicDetail } from "../types";
+import { ClinicDetail } from "@/types/clinic";
 import Icon from "@/components/UI/AppIcon";
 
 interface ClinicInfoProps {
@@ -81,11 +81,10 @@ const ClinicInfo = ({ clinic, className = "" }: ClinicInfoProps) => {
               return (
                 <div
                   key={facility.id}
-                  className={`flex flex-row-reverse items-center gap-2 border rounded-xl p-3 transition-all duration-300 ${
-                    available
+                  className={`flex flex-row-reverse items-center gap-2 border rounded-xl p-3 transition-all duration-300 ${available
                       ? "border-green-300 bg-green-50 text-green-700 dark:bg-green-900/30 dark:border-green-600 dark:text-green-300"
                       : "border-gray-200 bg-gray-100 text-gray-400 dark:bg-gray-800 dark:border-gray-700"
-                  } hover:scale-[1.02]`}
+                    } hover:scale-[1.02]`}
                 >
                   <Icon
                     name={facility.icon as any}

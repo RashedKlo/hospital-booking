@@ -1,16 +1,19 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
+import { authStorage } from "@/utils/auth";
 
 const Header = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [sticky, setSticky] = useState(false);
   const [openIndex, setOpenIndex] = useState(-1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const navbarToggleHandler = useCallback(() => setNavbarOpen(prev => !prev), []);
   const closeNavbar = useCallback(() => setNavbarOpen(false), []);
@@ -18,6 +21,28 @@ const Header = () => {
   const handleStickyNavbar = useCallback(() => {
     setSticky(window.scrollY >= 60);
   }, []);
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = () => {
+      const authData = authStorage.getCurrentUser();
+      setIsAuthenticated(!!authData);
+    };
+
+    checkAuth();
+
+    // Listen for storage changes (e.g., login/logout in another tab)
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  // Logout handler
+  const handleLogout = useCallback(() => {
+    authStorage.clearAuthData();
+    setIsAuthenticated(false);
+    router.push('/');
+    closeNavbar();
+  }, [router, closeNavbar]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleStickyNavbar, { passive: true });
@@ -56,8 +81,8 @@ const Header = () => {
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center transition-all duration-300 ${sticky
-            ? "bg-white/95 shadow-lg shadow-gray-900/5 backdrop-blur-xl dark:bg-gray-900/95 dark:shadow-gray-100/5"
-            : "bg-white/80 backdrop-blur-md dark:bg-gray-900/80"
+          ? "bg-white/95 shadow-lg shadow-gray-900/5 backdrop-blur-xl dark:bg-gray-900/95 dark:shadow-gray-100/5"
+          : "bg-white/80 backdrop-blur-md dark:bg-gray-900/80"
           }`}
         dir="rtl"
       >
@@ -123,8 +148,8 @@ const Header = () => {
                     <Link
                       href={menuItem.path}
                       className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 ${pathname === menuItem.path
-                          ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30"
-                          : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800/50"
+                        ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30"
+                        : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800/50"
                         }`}
                     >
                       {pathname === menuItem.path && (
@@ -191,26 +216,48 @@ const Header = () => {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2 lg:gap-3">
-              {/* Sign In - Hidden on mobile */}
-              <Link
-                href="/signin"
-                className="group hidden items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 md:flex"
-              >
-                تسجيل الدخول
-                <svg
-                  className="h-4 w-4 transition-transform group-hover:-translate-x-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {/* Sign In / Logout - Hidden on mobile */}
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="group hidden items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-red-50 hover:text-red-600 dark:text-gray-200 dark:hover:bg-red-900/20 dark:hover:text-red-400 md:flex"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
-              </Link>
+                  تسجيل الخروج
+                  <svg
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </button>
+              ) : (
+                <Link
+                  href="/signin"
+                  className="group hidden items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800 md:flex"
+                >
+                  تسجيل الدخول
+                  <svg
+                    className="h-4 w-4 transition-transform group-hover:-translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                    />
+                  </svg>
+                </Link>
+              )}
 
               {/* Book Appointment - Hidden on mobile */}
               <Link
@@ -327,8 +374,8 @@ const Header = () => {
                         href={menuItem.path}
                         onClick={closeNavbar}
                         className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${pathname === menuItem.path
-                            ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg"
-                            : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
+                          ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg"
+                          : "text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
                           }`}
                       >
                         {pathname === menuItem.path && (
@@ -383,13 +430,35 @@ const Header = () => {
 
               {/* Mobile Menu Footer */}
               <div className="border-t border-gray-200 p-4 space-y-2 dark:border-gray-800">
-                <Link
-                  href="/signin"
-                  onClick={closeNavbar}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-                >
-                  تسجيل الدخول
-                </Link>
+                {isAuthenticated ? (
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
+                  >
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    تسجيل الخروج
+                  </button>
+                ) : (
+                  <Link
+                    href="/signin"
+                    onClick={closeNavbar}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    تسجيل الدخول
+                  </Link>
+                )}
                 <Link
                   href="/contact"
                   onClick={closeNavbar}

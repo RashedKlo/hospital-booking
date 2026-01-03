@@ -4,83 +4,73 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SingleAppointment, { Appointment } from "./SingleAppointment";
 import { ToastContainer, Toast } from "./Toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const AppointmentsList = () => {
+  const { accessToken, isAuthenticated } = useAuth();
   const [filter, setFilter] = useState<
-    "all" | "upcoming" | "completed" | "cancelled"
+    "all" | "upcoming" | "completed" | "cancelled" | string
   >("all");
   const [isLoading, setIsLoading] = useState(true);
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    {
-      id: 1,
-      doctorName: "د. سارة أحمد",
-      clinicName: "عيادات الشفاء التخصصية",
-      specialty: "طب الأسرة",
-      date: "2025-11-15",
-      time: "10:00 صباحاً",
-      status: "upcoming",
-      department: "العيادات الخارجية",
-      appointmentNumber: "A-2025-001",
-      price: "150 ر.س",
-    },
-    {
-      id: 2,
-      doctorName: "د. محمد حسن",
-      clinicName: "مستشفى القلب الدولي",
-      specialty: "أخصائي قلب",
-      date: "2025-11-18",
-      time: "02:30 مساءً",
-      status: "upcoming",
-      department: "قسم القلب",
-      appointmentNumber: "A-2025-002",
-      price: "300 ر.س",
-    },
-    {
-      id: 3,
-      doctorName: "د. ليلى كمال",
-      clinicName: "مركز الجراحة المتطور",
-      specialty: "جراحة عامة",
-      date: "2025-10-25",
-      time: "09:00 صباحاً",
-      status: "completed",
-      department: "الجراحة",
-      appointmentNumber: "A-2025-003",
-      price: "250 ر.س",
-    },
-    {
-      id: 4,
-      doctorName: "د. أحمد يوسف",
-      clinicName: "عيادة الأطفال السعيدة",
-      specialty: "أطفال",
-      date: "2025-10-20",
-      time: "11:00 صباحاً",
-      status: "cancelled",
-      department: "طب الأطفال",
-      appointmentNumber: "A-2025-004",
-      price: "120 ر.س",
-    },
-    {
-      id: 5,
-      doctorName: "د. فاطمة علي",
-      clinicName: "مستشفى النساء والولادة",
-      specialty: "نساء وولادة",
-      date: "2025-11-20",
-      time: "03:00 مساءً",
-      status: "upcoming",
-      department: "النساء والولادة",
-      appointmentNumber: "A-2025-005",
-      price: "200 ر.س",
-    },
-  ]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
-    // Simulate data fetching
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    const fetchAppointments = async () => {
+      if (!isAuthenticated || !accessToken) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const response = await fetch('/hospital-booking/api/appointments?Page=1&Limit=20', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Fetched appointments:", result);
+
+          if (result.success && result.data && Array.isArray(result.data.appointments)) {
+            const mapped = result.data.appointments.map((apt: any) => {
+              const dateObj = new Date(apt.appointmentTime);
+              const date = dateObj.toISOString().split('T')[0];
+              const time = dateObj.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+
+              return {
+                id: apt.appointmentId,
+                doctorName: apt.doctor?.fullName || "غير محدد",
+                clinicName: apt.doctor?.clinic?.name || "العيادة الرئيسية",
+                specialty: "عام", // Property not available in current API response
+                date: date,
+                time: time,
+                status: (apt.status || "upcoming").toLowerCase(),
+                department: "عام", // Property not available in current API response
+                appointmentNumber: `A-${apt.appointmentId}`,
+                price: "0", // Property not available in current API response
+              };
+            });
+            setAppointments(mapped);
+          } else {
+            setAppointments([]);
+          }
+
+        } else {
+          console.error("Failed to fetch appointments");
+          setAppointments([]);
+        }
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAppointments();
+  }, [isAuthenticated, accessToken]);
 
   const addToast = (type: Toast["type"], message: string) => {
     const id = Date.now().toString();
@@ -192,8 +182,8 @@ const AppointmentsList = () => {
               onClick={() => setFilter(btn.value)}
               disabled={isLoading}
               className={`${filter === btn.value
-                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
-                  : "bg-white text-body-color dark:bg-gray-dark dark:text-body-color-dark"
+                ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                : "bg-white text-body-color dark:bg-gray-dark dark:text-body-color-dark"
                 } rounded-xl px-6 py-3 text-base font-semibold shadow-md transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {btn.label} <span className="font-bold">({btn.count})</span>

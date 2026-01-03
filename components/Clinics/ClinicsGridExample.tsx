@@ -2,7 +2,7 @@
 import React from 'react';
 import ClinicCard from './ClinicCard';
 import ClinicCardSkeleton from './ClinicCardSkeleton';
-import { Clinic } from '../types';
+import { Clinic } from '@/types/clinic';
 
 interface ClinicsGridExampleProps {
   clinics?: Clinic[];
@@ -18,8 +18,8 @@ const ClinicsGridExample: React.FC<ClinicsGridExampleProps> = ({ clinics = [], l
         {loading
           ? placeholders.map((_, i) => <ClinicCardSkeleton key={i} />)
           : clinics.map((c) => (
-              <ClinicCard key={c.id} clinic={c} />
-            ))}
+            <ClinicCard key={c.id} clinic={c} />
+          ))}
       </div>
     </div>
   );

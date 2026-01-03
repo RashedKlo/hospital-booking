@@ -19,7 +19,7 @@ import {
 import { useState } from "react";
 import { DetailsModal, CancelModal, RescheduleModal } from "./AppointmentModals";
 
-type AppointmentStatus = "upcoming" | "completed" | "cancelled";
+type AppointmentStatus = "upcoming" | "completed" | "cancelled" | string;
 
 export interface Appointment {
   id: number;
@@ -73,6 +73,15 @@ const SingleAppointment = ({ appointment, onCancel, onReschedule }: SingleAppoin
           gradientBorder: "from-rose-400 via-red-500 to-pink-500",
           icon: <XCircle className="h-4 w-4" />,
           label: "ملغي",
+        };
+      default:
+        return {
+          bgColor: "bg-gray-50 dark:bg-gray-900/20",
+          textColor: "text-gray-700 dark:text-gray-400",
+          borderColor: "border-gray-200 dark:border-gray-800",
+          gradientBorder: "from-gray-400 via-gray-500 to-gray-600",
+          icon: <AlertCircle className="h-4 w-4" />,
+          label: status || "غير محدد",
         };
     }
   };

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Testimonial } from "../types";
+import { Testimonial } from "@/types/clinic";
 import Icon from "@/components/UI/AppIcon";
 
 interface TestimonialsSectionProps {

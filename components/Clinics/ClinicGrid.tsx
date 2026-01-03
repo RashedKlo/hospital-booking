@@ -2,7 +2,7 @@
 import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ClinicCard from './ClinicCard';
-import { Clinic } from '../types';
+import { Clinic } from '@/types/clinic';
 import Icon from '@/components/UI/AppIcon';
 
 interface ClinicGridProps {
@@ -146,8 +146,8 @@ const ClinicGrid: React.FC<ClinicGridProps> = memo(({
   if (loading) {
     return (
       <div className={`${viewMode === 'grid'
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
-          : 'space-y-4'
+        ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
+        : 'space-y-4'
         } ${className}`}>
         {Array.from({ length: 6 }).map((_, index) => (
           <ClinicCardSkeleton key={index} index={index} />
@@ -168,8 +168,8 @@ const ClinicGrid: React.FC<ClinicGridProps> = memo(({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
       className={`${viewMode === 'grid'
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
-          : 'flex flex-col space-y-4'
+        ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
+        : 'flex flex-col space-y-4'
         } ${className}`}
       role="list"
       aria-label="قائمة العيادات الطبية"

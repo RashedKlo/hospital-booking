@@ -3,7 +3,7 @@ import React, { memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Icon from '@/components/UI/AppIcon';
-import { Clinic } from '../types';
+import { Clinic } from '@/types/clinic';
 
 interface ClinicCardProps {
   clinic: Clinic;

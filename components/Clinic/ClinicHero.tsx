@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ClinicDetail } from "../types";
+import { ClinicDetail } from "@/types/clinic";
 import Icon from "@/components/UI/AppIcon";
 
 interface ClinicHeroProps {
@@ -16,9 +16,8 @@ const ClinicHero = ({ clinic, className = "" }: ClinicHeroProps) => {
         name="Star"
         size={20}
         color={index < Math.floor(rating) ? "#F59E0B" : "#E5E7EB"}
-        className={`rating-star ${
-          index < Math.floor(rating) ? "text-warning" : "text-border"
-        }`}
+        className={`rating-star ${index < Math.floor(rating) ? "text-warning" : "text-border"
+          }`}
       />
     ));
   };

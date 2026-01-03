@@ -80,7 +80,7 @@ const Hero = () => {
 
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4">
                   <Link
-                    href="/book-now"
+                    href="/clinics"
                     className="inline-flex items-center justify-center rounded-lg bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/40"
                   >
                     احجز موعدك الآن

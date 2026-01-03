@@ -1,7 +1,7 @@
 "use client";
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
-import { SortOption } from '../types';
+import { SortOption } from '@/types/clinic';
 import Icon from '@/components/UI/AppIcon';
 
 interface SortControlsProps {
@@ -101,8 +101,8 @@ const SortControls: React.FC<SortControlsProps> = memo(({
                 whileHover={{ scale: isActive ? 1 : 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${isActive
-                    ? 'bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                  ? 'bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700/50'
                   }`}
               >
                 <Icon name={icon as any} size={16} />

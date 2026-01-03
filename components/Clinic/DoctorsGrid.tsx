@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { Doctor } from "../types";
+import { Doctor } from "@/types/clinic";
 import Icon from "@/components/UI/AppIcon";
 
 interface DoctorsGridProps {
@@ -76,7 +76,7 @@ const DoctorsGrid = ({ doctors, onBookingClick, className = "" }: DoctorsGridPro
                   <div className="absolute inset-0 bg-gradient-to-r from-muted via-muted/50 to-muted 
                     animate-pulse" />
                 )}
-                
+
                 {/* Image */}
                 <img
                   src={doctor.image}
@@ -84,11 +84,10 @@ const DoctorsGrid = ({ doctors, onBookingClick, className = "" }: DoctorsGridPro
                   loading="lazy"
                   onLoad={() => handleImageLoad(doctor.id)}
                   className={`w-full h-full object-cover transition-all duration-500 
-                    group-hover:scale-105 ${
-                    isImageLoaded ? "opacity-100" : "opacity-0"
-                  }`}
+                    group-hover:scale-105 ${isImageLoaded ? "opacity-100" : "opacity-0"
+                    }`}
                 />
-                
+
                 {/* Availability Badge */}
                 <div className="absolute top-3 right-3 z-10">
                   <div
@@ -168,10 +167,9 @@ const DoctorsGrid = ({ doctors, onBookingClick, className = "" }: DoctorsGridPro
                     disabled={doctor.availability === "unavailable"}
                     className={`w-full py-2 rounded-clinical-sm text-sm font-arabic-body 
                       transition-all duration-200 transform active:scale-95
-                      ${
-                        doctor.availability === "available"
-                          ? "bg-primary text-white hover:bg-primary/90 hover:shadow-md"
-                          : doctor.availability === "busy"
+                      ${doctor.availability === "available"
+                        ? "bg-primary text-white hover:bg-primary/90 hover:shadow-md"
+                        : doctor.availability === "busy"
                           ? "bg-warning/10 text-warning hover:bg-warning/20"
                           : "bg-muted text-muted-foreground cursor-not-allowed opacity-60"
                       }`}
@@ -179,8 +177,8 @@ const DoctorsGrid = ({ doctors, onBookingClick, className = "" }: DoctorsGridPro
                     {doctor.availability === "available"
                       ? "احجز موعد"
                       : doctor.availability === "busy"
-                      ? "قائمة الانتظار"
-                      : "غير متاح"}
+                        ? "قائمة الانتظار"
+                        : "غير متاح"}
                   </button>
                 </div>
               </div>

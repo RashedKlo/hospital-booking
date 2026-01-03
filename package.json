@@ -12,24 +12,27 @@
     "deploy": "npm run build:prod && touch dist/.nojekyll"
   },
   "dependencies": {
-    "eslint": "8.33.0",
-    "eslint-config-next": "13.1.6",
+    "cookie-universal": "^2.2.2",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.0.6",
     "framer-motion": "^12.23.24",
-    "lucide-react": "^0.552.0",
-    "next": "^13.5.6",
-    "next-themes": "^0.2.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-modal-video": "^2.0.0"
+    "lucide-react": "^0.555.0",
+    "next": "^16.0.6",
+    "next-themes": "^0.4.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "universal-cookie": "^8.0.1"
   },
   "devDependencies": {
-    "@types/node": "^20.8.9",
-    "@types/react": "^18.2.33",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
-    "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.6",
-    "tailwindcss": "^3.3.5",
-    "typescript": "^5.2.2"
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "prettier": "^3.7.3",
+    "prettier-plugin-tailwindcss": "^0.7.1",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3"
   }
 }

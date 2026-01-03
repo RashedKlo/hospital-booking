@@ -19,12 +19,12 @@ interface BookingFormData {
   notes: string;
 }
 
-const BookingModal = ({ 
-  isOpen, 
-  onClose, 
+const BookingModal = ({
+  isOpen,
+  onClose,
   clinicName = 'العيادة المختارة',
   doctorName = 'الطبيب المختار',
-  className = '' 
+  className = ''
 }: BookingModalProps) => {
   const [formData, setFormData] = useState<BookingFormData>({
     patientName: '',
@@ -104,7 +104,7 @@ const BookingModal = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -114,7 +114,7 @@ const BookingModal = ({
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Reset form and close modal
       setFormData({
         patientName: '',
@@ -124,12 +124,12 @@ const BookingModal = ({
         serviceType: '',
         notes: ''
       });
-      
+
       onClose();
-      
+
       // Show success message (in real app, use toast notification)
       alert('تم حجز الموعد بنجاح! سيتم التواصل معك قريباً لتأكيد الموعد.');
-      
+
     } catch (error) {
       console.error('Booking error:', error);
       alert('حدث خطأ أثناء حجز الموعد. يرجى المحاولة مرة أخرى.');
@@ -147,7 +147,7 @@ const BookingModal = ({
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className={`fixed inset-0 z-2000 flex items-center justify-center p-4 modal-backdrop bg-black/50 animate-fade-in ${className}`}
       onClick={handleBackdropClick}
     >
@@ -167,7 +167,7 @@ const BookingModal = ({
               </p>
             </div>
           </div>
-          
+
           <button
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground"
@@ -208,19 +208,33 @@ const BookingModal = ({
 
           {/* Appointment Time */}
           <select
-            placeholder="اختر الوقت المناسب"
             value={formData.appointmentTime}
             onChange={(e) => handleInputChange('appointmentTime', e.target.value)}
             required
-          />
+            className="w-full px-3 py-2 border border-border rounded-clinical-sm font-arabic-body text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          >
+            <option value="" disabled>اختر الوقت المناسب</option>
+            {timeSlots.map((slot) => (
+              <option key={slot.value} value={slot.value}>
+                {slot.label}
+              </option>
+            ))}
+          </select>
 
           {/* Service Type */}
           <select
-            placeholder="اختر نوع الخدمة"
             value={formData.serviceType}
             onChange={(e) => handleInputChange('serviceType', e.target.value)}
             required
-          />
+            className="w-full px-3 py-2 border border-border rounded-clinical-sm font-arabic-body text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          >
+            <option value="" disabled>اختر نوع الخدمة</option>
+            {serviceOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
 
           {/* Notes */}
           <div>
@@ -245,7 +259,7 @@ const BookingModal = ({
             >
               إلغاء
             </button>
-            
+
             <button
               type="submit"
               className="flex-1 font-arabic-body"

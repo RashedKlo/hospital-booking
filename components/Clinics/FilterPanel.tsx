@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FilterOptions, RegionOption, SpecializationOption } from '../types';
+import { FilterOptions, RegionOption, SpecializationOption } from '@/types/clinic';
 import Icon from '@/components/UI/AppIcon';
 
 interface FilterPanelProps {
-  filters: FilterOptions;
-  onFiltersChange: (filters: FilterOptions) => void;
+  filters: Partial<FilterOptions>;
+  onFiltersChange: (filters: Partial<FilterOptions>) => void;
   totalResults: number;
   className?: string;
 }
