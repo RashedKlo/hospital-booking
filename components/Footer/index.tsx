@@ -25,7 +25,7 @@ const Footer = () => {
                 <Link href="/" className="group mb-8 inline-block">
                   <div className="relative">
                     <Image
-                      src={getImagePath("/images/logo/logo-2.svg")}
+                      src={getImagePath("/images/logo/logo.svg")}
                       alt="logo"
                       className="w-full transition-transform duration-300 group-hover:scale-105 dark:hidden"
                       width={140}

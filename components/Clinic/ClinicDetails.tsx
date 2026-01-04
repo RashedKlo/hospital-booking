@@ -30,6 +30,7 @@ const ClinicDetails = memo(({ initialData }: ClinicDetailsProps) => {
     // Fetch clinic data
     useEffect(() => {
         const fetchClinicData = async () => {
+            if (initialData) return;
             try {
                 setIsLoading(true);
                 setError(null);
@@ -53,7 +54,7 @@ const ClinicDetails = memo(({ initialData }: ClinicDetailsProps) => {
                         primarySpecialty: 'عام', // Default specialty
                         rating: clinic.rating || 0,
                         reviewCount: clinic.reviewCount || 0,
-                        coverImage: clinic.imageUrl || '/images/placeholder-clinic.jpg',
+                        coverImage: clinic.imageUrl || '',
                         coverAlt: clinic.name || 'Clinic Image',
                         description: clinic.description || '',
                         services: services.services.map((s: any) => ({
@@ -77,7 +78,7 @@ const ClinicDetails = memo(({ initialData }: ClinicDetailsProps) => {
                             reviewCount: 0,
                             languages: ['العربية', 'English'],
                             availability: d.isActive ? 'available' : 'unavailable',
-                            image: '/images/doctor-placeholder.jpg', // Mock or add to API
+                            image: '', // Mock or add to API
                             alt: d.fullName,
                             experience: `${d.experienceYears || 0} سنوات خبرة`,
                             education: d.bio || ''
@@ -88,7 +89,7 @@ const ClinicDetails = memo(({ initialData }: ClinicDetailsProps) => {
                             rating: r.rating || 5,
                             comment: r.comment || '',
                             date: r.createdAt || new Date().toISOString(),
-                            avatar: '/images/avatar-placeholder.jpg',
+                            avatar: '',
                             alt: 'Patient Avatar',
                             verified: true
                         })),

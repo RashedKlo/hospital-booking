@@ -1,4 +1,4 @@
-import { getImagePath } from "@/lib/utils";
+import { } from "@/lib/utils";
 import { Testimonial } from "@/types/testimonial";
 import SectionTitle from "../Common/SectionTitle";
 import SingleTestimonial from "./SingleTestimonial";
@@ -10,7 +10,7 @@ const getTestimonialData = (): Testimonial[] => [
     designation: "مريض - قسم الباطنية",
     content:
       "تجربة رائعة مع نظام الحجز الإلكتروني. سهل الاستخدام ووفر علي الكثير من الوقت. لم أعد أضطر للانتظار في طوابير طويلة.",
-    image: getImagePath("/images/testimonials/auth-01.png"),
+    image: ("/images/testimonials/auth-01.png"),
     star: 5,
   },
   {
@@ -19,7 +19,7 @@ const getTestimonialData = (): Testimonial[] => [
     designation: "مريضة - قسم النساء والولادة",
     content:
       "الخدمة ممتازة والأطباء محترفون جداً. نظام الحجز الإلكتروني سهل ومريح، وحصلت على موعدي في الوقت المحدد بالضبط.",
-    image: getImagePath("/images/testimonials/auth-02.png"),
+    image: ("/images/testimonials/auth-02.png"),
     star: 5,
   },
   {
@@ -28,7 +28,7 @@ const getTestimonialData = (): Testimonial[] => [
     designation: "مريض - قسم العظام",
     content:
       "أفضل مستشفى تعاملت معها. النظام الإلكتروني منظم ومرتب، والموظفون متعاونون. أنصح الجميع بهذه الخدمة الرائعة.",
-    image: getImagePath("/images/testimonials/auth-03.png"),
+    image: ("/images/testimonials/auth-03.png"),
     star: 5,
   },
 ];
