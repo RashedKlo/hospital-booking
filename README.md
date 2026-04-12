@@ -2,6 +2,9 @@
 
 A modern, responsive hospital booking application built with Next.js, Tailwind CSS, and Framer Motion.
 
+## Live Demo
+**Live Demo:** https://rashedklo.github.io/hospital-booking
+
 ## 🚀 Features
 
 - **Modern UI/UX**: Glassmorphism design, smooth animations, and responsive layout.
